@@ -9,7 +9,7 @@
 
 package org.apache.pekko.persistence.jdbc.state
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import org.apache.pekko
 import pekko.actor.ActorSystem
 import pekko.Done
