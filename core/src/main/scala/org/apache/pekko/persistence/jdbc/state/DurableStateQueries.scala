@@ -102,6 +102,13 @@ import pekko.persistence.jdbc.config.DurableStateTableConfiguration
     durableStateTable.filter(_.persistenceId === persistenceId).delete
   }
 
+  /**
+   * @since 1.1.0
+   */
+  def deleteBasedOnPersistenceIdAndRevision(persistenceId: String, revision: Long) = {
+    durableStateTable.filter(r => r.persistenceId === persistenceId && r.revision === revision).delete
+  }
+
   def deleteAllFromDb() = {
     durableStateTable.delete
   }

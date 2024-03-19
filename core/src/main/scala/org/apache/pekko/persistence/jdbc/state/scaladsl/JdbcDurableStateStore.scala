@@ -117,7 +117,7 @@ class JdbcDurableStateStore[A](
     db.run(queries.deleteFromDb(persistenceId).map(_ => Done))
 
   def deleteObject(persistenceId: String, revision: Long): Future[Done] =
-    db.run(queries.deleteFromDb(persistenceId).map(_ => Done))
+    db.run(queries.deleteBasedOnPersistenceIdAndRevision(persistenceId, revision).map(_ => Done))
 
   def currentChanges(tag: String, offset: Offset): Source[DurableStateChange[A], NotUsed] = {
     Source
