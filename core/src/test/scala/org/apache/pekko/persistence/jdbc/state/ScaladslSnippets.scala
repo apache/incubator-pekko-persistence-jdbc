@@ -11,13 +11,10 @@ package org.apache.pekko.persistence.jdbc.state
 
 import scala.concurrent.{ExecutionContext, Future}
 import org.apache.pekko
-import org.apache.pekko.persistence.state.javadsl.GetObjectResult
 import pekko.actor.ActorSystem
 import pekko.Done
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
-
-import java.util.Optional
 
 object ScaladslSnippets extends ScalaFutures with Matchers {
 
@@ -101,9 +98,6 @@ object ScaladslSnippets extends ScalaFutures with Matchers {
     val store = DurableStateStoreRegistry
       .get(system)
       .durableStateStoreFor[JdbcDurableStateStore[String]](JdbcDurableStateStore.Identifier)
-
-    store.deleteObject("p123", 1).futureValue shouldBe Done
-    store.getObject("p123").futureValue.value shouldBe Some(GetObjectResult(Optional.of("a valid string"), 2))
 
     store.deleteObject("p123").futureValue shouldBe Done
     store.getObject("p123").futureValue.value shouldBe None
