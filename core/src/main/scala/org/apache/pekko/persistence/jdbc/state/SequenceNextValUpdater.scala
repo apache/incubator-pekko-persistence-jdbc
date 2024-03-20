@@ -60,3 +60,57 @@ import slick.sql.SqlStreamingAction
 
   def getSequenceNextValueExpr() = sql"""#$nextValFetcher""".as[String]
 }
+
+/**
+ * INTERNAL API
+ */
+@InternalApi private[jdbc] class MySQLSequenceNextValUpdater(profile: JdbcProfile,
+    val durableStateTableCfg: DurableStateTableConfiguration)
+    extends SequenceNextValUpdater {
+
+  import profile.api._
+
+  final val nextValFetcher = durableStateTableCfg.schemaName match {
+    case Some(schemaName) =>
+      s"""|SELECT AUTO_INCREMENT
+          |FROM information_schema.TABLES
+          |WHERE TABLE_NAME = '${durableStateTableCfg.tableName}'
+          |AND TABLE_SCHEMA = '$schemaName'
+          | """.stripMargin
+    case None =>
+      s"""|SELECT AUTO_INCREMENT
+          |FROM information_schema.TABLES
+          |WHERE TABLE_NAME = '${durableStateTableCfg.tableName}'
+          | """.stripMargin
+  }
+
+  def getSequenceNextValueExpr() = sql"""#$nextValFetcher""".as[String]
+}
+
+/**
+ * INTERNAL API
+ */
+@InternalApi private[jdbc] class SqlServerSequenceNextValUpdater(profile: JdbcProfile,
+    val durableStateTableCfg: DurableStateTableConfiguration)
+    extends SequenceNextValUpdater {
+
+  import profile.api._
+
+  final val nextValFetcher = ""
+
+  def getSequenceNextValueExpr() = sql"""#$nextValFetcher""".as[String]
+}
+
+/**
+ * INTERNAL API
+ */
+@InternalApi private[jdbc] class OracleSequenceNextValUpdater(profile: JdbcProfile,
+    val durableStateTableCfg: DurableStateTableConfiguration)
+    extends SequenceNextValUpdater {
+
+  import profile.api._
+
+  final val nextValFetcher = s"""(SELECT DURABLE_STATE__GLOBAL_OFFSET_SEQ.nextval FROM DUAL)"""
+
+  def getSequenceNextValueExpr() = sql"""#$nextValFetcher""".as[String]
+}
