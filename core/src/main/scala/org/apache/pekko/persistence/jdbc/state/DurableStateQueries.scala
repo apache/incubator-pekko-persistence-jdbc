@@ -54,7 +54,7 @@ import pekko.persistence.jdbc.config.DurableStateTableConfiguration
   }
 
   private[jdbc] def selectFromDbByPersistenceId(persistenceId: Rep[String]) =
-    durableStateTable.filter(_.persistenceId === persistenceId).sortBy(_.revision.desc)
+    durableStateTable.filter(_.persistenceId === persistenceId)
 
   private[jdbc] def insertDbWithDurableState(row: DurableStateTables.DurableStateRow, seqNextValue: String) = {
     sqlu"""INSERT INTO #${durableStateTableCfg.tableName}

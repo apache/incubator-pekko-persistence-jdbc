@@ -148,7 +148,7 @@ abstract class JdbcDurableStateSpec(config: Config, schemaType: SchemaType) exte
 
         } yield h
       } { v =>
-        // TODO current behavior is that deleting the latest revision means getObject returns None (not an older revision)
+        // current behavior is that deleting the latest revision means getObject returns None (we don't preserve older revisions)
         v.value shouldBe None
       }
     }
