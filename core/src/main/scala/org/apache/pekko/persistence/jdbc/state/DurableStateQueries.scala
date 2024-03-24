@@ -106,7 +106,7 @@ import slick.jdbc.SQLServerProfile
   /**
    * Deletes a particular revision of an object based on its persistenceId.
    * This revision may no longer exist and if so, no delete will occur.
-   * 
+   *
    * @since 1.1.0
    */
   def deleteBasedOnPersistenceIdAndRevision(persistenceId: String, revision: Long) = {
