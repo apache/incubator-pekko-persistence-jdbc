@@ -16,13 +16,14 @@ package org.apache.pekko.persistence.jdbc.state
 
 import org.apache.pekko
 import pekko.annotation.InternalApi
+import pekko.persistence.jdbc.config.DurableStateTableConfiguration
+
 import slick.jdbc.{ JdbcProfile, SetParameter }
 import slick.jdbc.H2Profile
 import slick.jdbc.MySQLProfile
 import slick.jdbc.OracleProfile
 import slick.jdbc.PostgresProfile
 import slick.jdbc.SQLServerProfile
-import pekko.persistence.jdbc.config.DurableStateTableConfiguration
 
 /**
  * INTERNAL API
@@ -100,6 +101,16 @@ import pekko.persistence.jdbc.config.DurableStateTableConfiguration
 
   def deleteFromDb(persistenceId: String) = {
     durableStateTable.filter(_.persistenceId === persistenceId).delete
+  }
+
+  /**
+   * Deletes a particular revision of an object based on its persistenceId.
+   * This revision may no longer exist and if so, no delete will occur.
+   *
+   * @since 1.1.0
+   */
+  def deleteBasedOnPersistenceIdAndRevision(persistenceId: String, revision: Long) = {
+    durableStateTable.filter(r => r.persistenceId === persistenceId && r.revision === revision).delete
   }
 
   def deleteAllFromDb() = {
